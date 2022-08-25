@@ -58,6 +58,7 @@ class CypressController
     public function factory(Request $request)
     {
         return $this->factoryBuilder($request->input('model'))
+            ->states((array) $request->input('state', []))
             ->times(intval($request->input('times', 1)))
             ->create($request->input('attributes'))
             ->each->setHidden([])

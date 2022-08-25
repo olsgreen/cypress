@@ -124,14 +124,16 @@ Cypress.Commands.overwrite('visit', (originalFn, subject, options) => {
  *          cy.create('App\\User', { active: false }, ['profile']);
  *          cy.create('App\\User', ['profile']);
  */
-Cypress.Commands.add('create', (model, times = 1, attributes = {}, relations = []) => {
+Cypress.Commands.add('create', (model, times = 1, attributes = {}, relations = [], state = []) => {
     if (Array.isArray(times)) {
+        state = attributes;
         attributes = {};
         relations = times;
         times = 1;
     }
 
     if (typeof times === 'object') {
+        state = relations;
         relations = attributes;
         attributes = times;
         times = 1;
@@ -143,7 +145,7 @@ Cypress.Commands.add('create', (model, times = 1, attributes = {}, relations = [
             return cy.request({
                 method: 'POST',
                 url: '/__cypress__/factory',
-                body: { attributes, model, times, relations, _token: token },
+                body: { attributes, model, times, relations, state, _token: token },
                 log: false,
             });
         })
